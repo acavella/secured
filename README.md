@@ -11,7 +11,7 @@ Secure.d is distributed packaged in a gzip compressed tarball (secured_<ver>.tar
 
 1. As `root`, copy the latest tarball to the `/root/` directory.
 2. Upack the tarball inside the `/root/` directory.
-```Shell
+```console
 # cp secured_<ver>.tar.gz /root/
 # tar -xzvf secured_<ver>.tar.gz
 ```
