@@ -10,11 +10,9 @@ A shell based script used to harden Enterprise Linux installations.  Currently d
 Secure.d is distributed packaged in a gzip compressed tarball (secured_<ver>.tar.gz).  The latest package can be downloaded from the Secure.d project page.  
 
 1. As `root`, copy the latest tarball to the `/root` directory.
-```
-# cp secured_<ver>.tar.gz /root/
-```
 2. Upack the tarball inside the `/root/` directory.
 ```
+# cp secured_<ver>.tar.gz /root/
 # tar -xzvf secured_<ver>.tar.gz
 ```
 
