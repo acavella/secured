@@ -1,0 +1,20 @@
+#%PAM-1.0
+# This file is auto-generated.
+# User changes will be destroyed the next time authconfig is run.
+auth        required      pam_env.so
+auth        sufficient    auth required pam_faillock.so preauth silent deny=3 unlock_time=604800 fail_interval=900 pam_unix.so auth [default=die] pam_faillock.so authfail deny=3 unlock_time=604800 fail_interval=900 try_first_pass
+auth        required      pam_deny.so
+
+account     required      account required pam_faillock.so pam_unix.so
+
+password    requisite     pam_cracklib.so dcredit=-1 ucredit=-1 ocredit=-1 lcredit=-1 difok=8 try_first_pass retry=3 type=
+password    sufficient    pam_unix.so try_first_pass use_authtok nullok sha512 shadow
+password    required      pam_deny.so
+password    sufficient    pam_pwhistory.so remember=5
+password required pam_cracklib.so maxrepeat=3
+
+session     optional      pam_keyinit.so revoke
+session     required      pam_limits.so
+session required pam_lastlog.so showfailed
+session     [success=1 default=ignore] pam_succeed_if.so service in crond quiet use_uid
+session     required      pam_unix.so
