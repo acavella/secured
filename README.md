@@ -1,5 +1,5 @@
 <div align=center>
-![alt text](https://tonycavella.com/wp-content/uploads/2016/12/logo_vert_500px-300x269.png "Secure.d Logo")
+<img src="https://tonycavella.com/wp-content/uploads/2016/12/logo_vert_500px-300x269.png" alt="Secure.d logo">
 </div>
 
 ## Description
