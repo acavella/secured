@@ -9,6 +9,9 @@
 # was designed using guidance and technical excerpts from DISA STIG
 # RHEL6 V1R13. 
 
+# WEBSITE: https://www.tonycavella.com/projects/secured
+# GITHUB: https://www.github.com/tonycavella/secured
+
 # Copyright (C) 2017 Anthony J. Cavella
 
 # This program is free software: you can redistribute it and/or modify
