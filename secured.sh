@@ -1,15 +1,15 @@
 #!/bin/bash
 
 # NAME:    Secure.d
-# VERSION: 0.1_c
-# UPDATED: 12/27/2016
+# VERSION: 0.2.0
+# UPDATED: 01/01/2017
 
 # DESCRIPTION: This script is designed to assist in auditing and
 # hardening Red Hat Enterprise Linux 6 security posture. This script
 # was designed using guidance and technical excerpts from DISA STIG
 # RHEL6 V1R13. 
 
-# Copyright (C) 2016 Anthony J. Cavella
+# Copyright (C) 2017 Anthony J. Cavella
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@
 
 printf "##########################################################################\n"
 printf "# Secure.d                                                               #\n"
-printf "# Copyright (C) 2016 Tony Cavella                                        #\n"
+printf "# Copyright (C) 2017 Tony Cavella                                        #\n"
 printf "# This program comes with ABSOLUTELY NO WARRANTY. This is free software, #\n" 
 printf "# and you are welcome to redistribute it under certain conditions;       #\n" 
 printf "# for details <http://www.gnu.org/licenses/gpl-3.0.html>.                #\n"
@@ -51,10 +51,17 @@ else
     exit 1
 fi
 
+WORKING_USER="$(whoami)"
+if [ "$WORKING_USER" != root ]; then
+    printf "EXIT ON ERROR: Not ROOT User\n"
+    exit 1
+fi
+
 printf "OS:       $OS_LONG ($OS_SIMPLE)\n"
 printf "RELEASE:  $VER_SHORT\n"
 printf "VERSION:  $VER_LONG\n"
-printf "ARCH:     x$ARCH_TYPE\n\n"
+printf "ARCH:     x$ARCH_TYPE\n"
+printf "USER:     $WORKING_USER\n\n"
 
 printf "INITIALIZATION COMPLETED, READY TO PROCEED\n"
 read -r -p "Are you ready to start security configuration? [Y/n] " response
@@ -66,93 +73,17 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
     echo "root: $ADMIN_EMAIL" >> /etc/aliases
     printf "Setting root email alias: [ DONE ]\n"
 
-# Perform YUM Update
-    printf "PACKAGE INSTALLATIONS AND UPGRADES\n"
-    printf "Performing Initial YUM Update:\r"
-    yum -y -q update
-    printf "Performing Initial YUM Update: [ DONE ]\n"
+# Performing YUM updates
+    printf "Performing YUM updates: \r"
+    ./bin/yum_updates.sh
+    printf "Performing YUM updates: [ DONE ]\n"
 
-# Perform Package Installations and Upgrades
-    printf "INSTALLING RPM PACKAGE AIDE:\r"
-    if rpm -qa | grep -q aide; then
-         printf "INSTALLING RPM PACKAGE AIDE:\r"
-    else
-         yum -y -q install aide
-         printf "INSTALLING RPM PACKAGE AIDE: [ DONE ]\n"
-    fi
-    printf "INSTALLING RPM PACKAGE SCREEN:\r"
-    if rpm -qa | grep -q screen; then
-         printf "INSTALLING RPM PACKAGE SCREEN:\r"
-    else
-         yum -y -q install screen
-         printf "INSTALLING RPM PACKAGE SCREEN: [ DONE ]\n"
-    fi
-    printf "INSTALLING RPM PACKAGE LOGROTATE:\r"
-    if rpm -qa | grep -q logrotate; then
-         printf "INSTALLING RPM PACKAGE LOGROTATE:\r"
-    else
-         yum -y -q install logrotate
-         printf "INSTALLING RPM PACKAGE LOGROTATE: [ DONE ]\n"
-    fi
-    printf "INSTALLING RPM PACKAGE LIBRESWAN:\r"
-    if rpm -qa | grep -q libreswan; then
-         printf "INSTALLING RPM PACKAGE LIBRESWAN:\r"
-    else
-         yum -y -q install libreswan
-         printf "INSTALLING RPM PACKAGE LIBRESWAN: [ DONE ]\n"
-    fi
+# Setting SSD parmeters
+    printf "Setting SSD parameters: \r"
+    ./bin/ssd.sh
+    printf "Setting SSD parameters: [ DONE ]\n"
 
-# Remove Unncessary and Insecure RPMs
-    printf "REMOVING RPM PACKAGE SENDMAIL:\r"
-    if rpm -qa | grep -q sendmail; then
-         yum -y -q erase sendmail
-         printf "REMOVING RPM PACKAGE SENDMAIL: [ DONE ]\n"
-    else
-         printf "REMOVING RPM PACKAGE SENDMAIL: [ DONE ]\n"
-    fi
-    printf "REMOVING RPM PACKAGE XINETD:\r"
-    if rpm -qa | grep -q xinetd; then
-         yum -y -q erase xinetd
-         printf "REMOVING RPM PACKAGE XINETD: [ DONE ]\n"
-    else
-         printf "REMOVING RPM PACKAGE XINETD: [ DONE ]\n"
-    fi
-    printf "REMOVING RPM PACKAGE TELNET SERVER:\r"
-    if rpm -qa | grep -q telnet-server; then
-         yum -y -q erase telnet-server
-         printf "REMOVING RPM PACKAGE TELNET SERVER: [ DONE ]\n"
-    else
-         printf "REMOVING RPM PACKAGE TELNET SERVER: [ DONE ]\n"
-    fi
-    printf "REMOVING RPM PACKAGE RSH SERVER:\r"
-    if rpm -qa | grep -q rsh-server; then
-         yum -y -q erase rsh-server
-         printf "REMOVING RPM PACKAGE RSH SERVER: [ DONE ]\n"
-    else
-         printf "REMOVING RPM PACKAGE RSH SERVER: [ DONE ]\n"
-    fi
-    printf "REMOVING RPM PACKAGE YPSERV:\r"
-    if rpm -qa | grep -q ypserv; then
-         yum -y -q erase ypserv
-         printf "REMOVING RPM PACKAGE YPSERV: [ DONE ]\n"
-    else
-         printf "REMOVING RPM PACKAGE YPSERV: [ DONE ]\n"
-    fi
-    printf "REMOVING RPM PACKAGE TFTP SERVER:\r"
-    if rpm -qa | grep -q tftp-server; then
-         yum -y -q erase tftp-server
-         printf "REMOVING RPM PACKAGE TFTP SERVER: [ DONE ]\n"
-    else
-         printf "REMOVING RPM PACKAGE TFTP SERVER: [ DONE ]\n"
-    fi
-    printf "REMOVING RPM PACKAGE OPENLDAP:\r"
-    if rpm -qa | grep -q openldap-servers; then
-         yum -y -q erase openldap-servers
-         printf "REMOVING RPM PACKAGE OPENLDAP: [ DONE ]\n"
-    else
-         printf "REMOVING RPM PACKAGE OPENLDAP: [ DONE ]\n"
-    fi
-
+# 
 
 
 
