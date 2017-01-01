@@ -83,8 +83,40 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
     ./bin/ssd.sh
     printf "Setting SSD parameters: [ DONE ]\n"
 
-# 
+# Setting default RPM permissions
+    printf "Setting default RPM permissions: \r"
+    ./bin/rpm_perms.sh
+    printf "Setting default RPM permissions: [ DONE ]\n"
 
+# Edit /dev/fstab SHM
+    printf "Setting proper parameters for /etc/fstab dev_shm: \r"
+    ./bin/dev_shm.sh
+    printf "Setting proper parameters for /etc/fstab dev_shm: [ DONE ]\n"
+
+# Setting system permissions
+    printf "Setting appropriate system permissions: \r"
+    ./bin/system_perm.sh
+    printf "Setting appropriate system permissions: [ DONE ]\n"
+
+# Setting appropriate UMASK
+    printf "Making changes to UMASK: \r"
+    ./bin/umask.sh 
+    printf "Making changes to UMASK: [ DONE ]\n"
+
+# Configuring system-auth 
+    printf "Making changes to system-auth: \r"
+    ./bin/sysauth.sh
+    printf "Making changes to system-auth: [ DONE ]\n"
+
+# Setting CTL-ALT-DEL functions
+    printf "Setting CTL-ALT-DEL default behavior: \r"
+    ./bin/ctlaltd.sh
+    printf "Setting CTL-ALT-DEL default behavior: [ DONE ]\n"
+
+# Setting DoD warning banner
+    printf "Setting DoD Warning banner: \r"
+    ./bin/banner.sh
+    printf "Setting DoD Warning banner: [ DONE ]\n"
 
 
 else
@@ -92,20 +124,25 @@ else
     exit 0
 fi
 
+yum install -y -q oscap
+yum install -y -q scap-security-guide
 
-exit 1
+oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_stig-rhel6-server-upstream --results-arf arf.xml --report report.html /usr/share/xml/scap/ssg/content/ssg-rhel6-ds.xml
+
+
+exit 0
 
 
 
 # Execute external scripts
-./bin/ssd.sh
-./bin/rpm_perms.sh
-./bin/shm.sh
-./bin/system_perm.sh
-./bin/umask.sh
-./bin/sysauth.sh
-./bin/ctlaltd.sh
-./bin/banner.sh
+#./bin/ssd.sh
+#./bin/rpm_perms.sh
+#./bin/shm.sh
+#./bin/system_perm.sh
+#./bin/umask.sh
+#./bin/sysauth.sh
+#./bin/ctlaltd.sh
+#./bin/banner.sh
 
 # X-Server / Gnome Settings
 printf "Detecting X-Server/Gnome Installation:\r"
