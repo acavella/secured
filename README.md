@@ -17,3 +17,4 @@ Secure.d is distributed packaged in a gzip compressed tarball (secured_<ver>.tar
 ```
 
 ## Usage 
+The script utilizes a single main script `secured.sh` and multiple minor scripts located in the `bin` directory.  
